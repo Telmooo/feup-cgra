@@ -35,12 +35,15 @@ class MySupply extends CGFobject {
 	}
 
     initMaterials() {
+        this.question_side = new CGFtexture(this.scene, 'images/vehicle/supply/question_side.jpg');
+        this.question_extremes = new CGFtexture(this.scene, 'images/vehicle/supply/question_extremes.jpg');
+        this.hit_block = new CGFtexture(this.scene, 'images/vehicle/supply/hit_block.jpg');
+
         this.supplyTex = new CGFappearance(this.scene);
         this.supplyTex.setAmbient(0.1, 0.1, 0.1, 1);
         this.supplyTex.setDiffuse(0.9, 0.9, 0.9, 1);
         this.supplyTex.setSpecular(0.1, 0.1, 0.1, 1);
         this.supplyTex.setShininess(10.0);
-        this.supplyTex.loadTexture('images/vehicle/supply/crate.png');
         this.supplyTex.setTextureWrap('REPEAT', 'REPEAT');
     }
 
@@ -122,16 +125,17 @@ class MySupply extends CGFobject {
 
     displayCube() {
         this.scene.pushMatrix();
-        this.supplyTex.apply();
         this.scene.translate(this.x, this.y, this.z);
         this.scene.rotate(this.orientation, 0, 1, 0);
 
         this.scene.pushMatrix();
 
+
+        this.supplyTex.setTexture(this.question_side);
+        this.supplyTex.apply();
         // ---- Back Face
         this.scene.translate(0, 0, -0.5);
         this.scene.rotate(Math.PI, 0, 1, 0);
-		this.scene.rotate(Math.PI/2, 0, 0, 1);
         this.quad.display();
         // ----
 
@@ -140,7 +144,6 @@ class MySupply extends CGFobject {
 
         // ---- Front Face
         this.scene.translate(0, 0, 0.5);
-		this.scene.rotate(Math.PI/2, 0, 0, 1);
         this.quad.display();
         // ----
 
@@ -150,7 +153,6 @@ class MySupply extends CGFobject {
         // ---- Right Face
         this.scene.translate(0.5, 0, 0);
         this.scene.rotate(Math.PI/2, 0, 1, 0);
-		this.scene.rotate(Math.PI/2, 0, 0, 1);
         this.quad.display();
         // ----
 
@@ -160,13 +162,14 @@ class MySupply extends CGFobject {
         // ---- Left Face
         this.scene.translate(-0.5, 0, 0);
         this.scene.rotate(-Math.PI/2, 0, 1, 0);
-		this.scene.rotate(-Math.PI/2, 0, 0, 1);
         this.quad.display();
         // ----
 
         this.scene.popMatrix();
         this.scene.pushMatrix();
 
+        this.supplyTex.setTexture(this.question_extremes);
+        this.supplyTex.apply();
         // ---- Bottom Face
         this.scene.translate(0, -0.5, 0);
         this.scene.rotate(Math.PI/2, 1, 0, 0);
@@ -179,7 +182,6 @@ class MySupply extends CGFobject {
         // ---- Upper Face
         this.scene.translate(0, 0.5, 0);
         this.scene.rotate(-Math.PI/2, 1, 0, 0);
-		this.scene.rotate(Math.PI, 0, 0, 1);
         this.quad.display();
         // ----
         this.scene.popMatrix();
@@ -189,6 +191,7 @@ class MySupply extends CGFobject {
     }
 
     displayExploded() {
+        this.supplyTex.setTexture(this.hit_block);
         this.supplyTex.apply();
         for (let i = 0; i < 6; i++) {
             this.scene.pushMatrix();

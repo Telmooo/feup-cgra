@@ -6,7 +6,7 @@
 class MyVehicle extends CGFobject {
     constructor(scene) {
         super(scene);
-        this.body = new MySphere(this.scene, 32, 16);
+        this.body = new MySphere(this.scene, 24, 12);
         this.gondola = new MyGondola(this.scene);
         this.rudder = new MyRudder(this.scene);
         this.flag = new MyFlag(this.scene);
@@ -48,6 +48,7 @@ class MyVehicle extends CGFobject {
         // ---- Body
         this.scene.pushMatrix();
         this.scene.scale(1, 1, 2);
+        this.scene.rotate(Math.PI/2, 0, 1, 0);
         this.bodyTex.apply();
         this.body.display();
         this.scene.material.apply();
@@ -277,8 +278,8 @@ class MyVehicle extends CGFobject {
 class MyGondola extends CGFobject {
     constructor(scene) {
         super(scene);
-        this.gondolaBody = new MyCylinder(this.scene, 16);
-        this.gondolaExtremes = new MySphere(this.scene, 16, 8);
+        this.gondolaBody = new MyCylinder(this.scene, 12);
+        this.gondolaExtremes = new MySphere(this.scene, 12, 6);
         this.helice = new MyHeliceSupport(this.scene);
         this.initMaterials();
     }
@@ -289,24 +290,16 @@ class MyGondola extends CGFobject {
         this.gondolaBodyTex.setDiffuse(0.9, 0.9, 0.9, 1);
         this.gondolaBodyTex.setSpecular(0.1, 0.1, 0.1, 1);
         this.gondolaBodyTex.setShininess(10.0);
-        this.gondolaBodyTex.loadTexture('images/vehicle/gondola/gondola3.jpg');
+        this.gondolaBodyTex.loadTexture('images/vehicle/gondola/gondola.jpg');
         this.gondolaBodyTex.setTextureWrap('REPEAT', 'REPEAT');
 
-        this.gondolaFrontTex = new CGFappearance(this.scene);
-        this.gondolaFrontTex.setAmbient(0.1, 0.1, 0.1, 1);
-        this.gondolaFrontTex.setDiffuse(0.9, 0.9, 0.9, 1);
-        this.gondolaFrontTex.setSpecular(0.1, 0.1, 0.1, 1);
-        this.gondolaFrontTex.setShininess(10.0);
-        this.gondolaFrontTex.loadTexture('images/vehicle/gondola/gondola_extremes3.jpg');
-        this.gondolaFrontTex.setTextureWrap('REPEAT', 'REPEAT');
-
-        this.gondolaBackTex = new CGFappearance(this.scene);
-        this.gondolaBackTex.setAmbient(0.1, 0.1, 0.1, 1);
-        this.gondolaBackTex.setDiffuse(0.9, 0.9, 0.9, 1);
-        this.gondolaBackTex.setSpecular(0.1, 0.1, 0.1, 1);
-        this.gondolaBackTex.setShininess(10.0);
-        this.gondolaBackTex.loadTexture('images/vehicle/gondola/gondola_extremes4.jpg');
-        this.gondolaBackTex.setTextureWrap('REPEAT', 'REPEAT');
+        this.gondolaExtremeTex = new CGFappearance(this.scene);
+        this.gondolaExtremeTex.setAmbient(0.1, 0.1, 0.1, 1);
+        this.gondolaExtremeTex.setDiffuse(0.9, 0.9, 0.9, 1);
+        this.gondolaExtremeTex.setSpecular(0.1, 0.1, 0.1, 1);
+        this.gondolaExtremeTex.setShininess(10.0);
+        this.gondolaExtremeTex.loadTexture('images/vehicle/gondola/gondola_extremes.jpg');
+        this.gondolaExtremeTex.setTextureWrap('REPEAT', 'REPEAT');
     }
 
     display() {
@@ -324,7 +317,7 @@ class MyGondola extends CGFobject {
         this.scene.pushMatrix();
         this.scene.translate(0, 0, 2);
         this.scene.rotate(Math.PI/2, 1, 0, 0);
-        this.gondolaFrontTex.apply();
+        this.gondolaExtremeTex.apply();
         this.gondolaExtremes.display();
         this.scene.popMatrix();
         // ----
@@ -332,8 +325,8 @@ class MyGondola extends CGFobject {
         // ---- Back Extreme
         this.scene.pushMatrix();
         this.scene.translate(0, 0, -2);
-        this.scene.rotate(-Math.PI/2, 1, 0, 0);
-        this.gondolaBackTex.apply();
+        this.scene.rotate(Math.PI/2, 1, 0, 0);
+        this.gondolaExtremeTex.apply();
         this.gondolaExtremes.display();
         this.scene.popMatrix();
         // ----
@@ -397,7 +390,7 @@ class MyGondola extends CGFobject {
 class MyHeliceSupport extends CGFobject {
     constructor(scene) {
         super(scene);
-        this.support = new MySphere(this.scene, 16, 8);
+        this.support = new MySphere(this.scene, 12, 6);
         this.helice = new MyHelice(this.scene);
         this.initMaterials();
     }
@@ -463,8 +456,8 @@ class MyHeliceSupport extends CGFobject {
 class MyHelice extends CGFobject {
     constructor(scene) {
         super(scene);
-        this.helice = new MyCircle(this.scene, 8);
-        this.heliceJoint = new MySphere(this.scene, 12, 6);
+        this.helice = new MyCircle(this.scene, 6);
+        this.heliceJoint = new MySphere(this.scene, 8, 4);
         this.defaultRotationSpeed = 0.08;
         this.MAX_ROTATION_SPEED = 0.8;
         this.angle = 0;

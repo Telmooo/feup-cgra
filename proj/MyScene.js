@@ -23,13 +23,18 @@ class MyScene extends CGFscene {
 
         this.enableTextures(true);
 
-        //Initialize scene objects
         this.axis = new CGFaxis(this);
+        /* -------------------------------------------------------------------------
+                                    FULL OBJECTS
+        /-------------------------------------------------------------------------*/
         this.vehicle = new MyVehicle(this, 4);
         this.cubemap = new MyCubeMap(this);
         this.terrain = new MyTerrain(this, 50, 8);
         this.billboard = new MyBillboard(this);
 
+        /* -------------------------------------------------------------------------
+                                    SPLITTED OBJECTS
+        /-------------------------------------------------------------------------*/
         this.objects=[
             undefined,
 			new MySphere(this, 16, 8),
@@ -67,14 +72,25 @@ class MyScene extends CGFscene {
             'Billboard': 14
 		};
 
-        //------ Textures
+        /* -------------------------------------------------------------------------
+                            TEXTURES FOR SPLITTED OBJECTS
+        /-------------------------------------------------------------------------*/
         this.textures = [
             undefined,
             new CGFtexture(this, 'images/earth.jpg'),
             new CGFtexture(this, 'images/texture_map_helper.png')
         ];
 
-        // cubemap
+        this.textureList = {
+            'None': 0,
+            'Earth': 1,
+            'Background': 2,
+            'Helper':  3
+        };
+
+        /* -------------------------------------------------------------------------
+                                    CUBEMAP BACKGROUND
+        /-------------------------------------------------------------------------*/
         this.backgrounds = [
             [
                 null, null, null, null, null, null
@@ -105,13 +121,6 @@ class MyScene extends CGFscene {
             ]
         ];
 
-        this.textureList = {
-            'None': 0,
-            'Earth': 1,
-            'Background': 2,
-            'Helper':  3
-        };
-
         this.backgroundList = {
             'None': 0,
             'Cloudy Day': 1,
@@ -123,14 +132,15 @@ class MyScene extends CGFscene {
             24.98,
             24.98,
             10.00,
-            24.98
+            10.00
         ];
 
 
         this.backgroundFilterIds = { 'Linear': 0, 'Nearest': 1 };
-        //-------
 
-        //------ Applied Material
+        /* -------------------------------------------------------------------------
+                                SPLITTED OBJECT MATERIAL
+        /-------------------------------------------------------------------------*/
 
         this.materialValues = {
             'Ambient': '#0000ff',
@@ -143,60 +153,54 @@ class MyScene extends CGFscene {
 
         this.updateMaterial();
 
-        //Objects connected to MyInterface
-        this.displayAxis = true;
+        /* -------------------------------------------------------------------------
+                                        OPTIONS
+        /-------------------------------------------------------------------------*/
+        // ---- general
+        this.displayAxis = false;
+        this.displayNormals = false;
+        this.wireframe = false;
+        // ----
+
+        // ---- splitted object gui
 		this.selectedObject = 0;
         this.selectedTexture = 0;
-        this.applyBackground = false;
-        this.selectedBackground = 0;
+        // ----
+
+        // ---- background
+        this.applyBackground = true;
+        this.selectedBackground = 1;
         this.selectedFilter = 0;
-        this.applyMaterial = false;
-        this.displayNormals = false;
+        // ----
 
-        this.keyP_pressed = false;
-
-
-		this.wireframe = false;
-
-        // Vehicle Things
+        // ---- vehicle
         this.showVehicle = true;
+        // -- limits
         this.MIN_SPEED = 0.05;
         this.MAX_SPEED = 10;
-        this.SPEED = 0.5;
-        this.ANGULAR_SPEED = 0.1;
         this.MIN_ANGULAR_SPEED = 0.02;
         this.MAX_ANGULAR_SPEED = 2;
-        this.speedFactor = 1.0;
-        this.scaleFactor = 1.0;
-        this.rotSpeedFactor = 0.5;
-        this.frictionFactor = 0.01;
-        this.lastFrameTime = undefined;
-        this.automatic_pilot = false;
+        // -- auto pilot
         this.ORBIT_RADIUS = 5;
         this.ORBIT_PERIOD = 5;
         this.ORBIT_ANGULAR_SPEED = (Math.PI * 2) / this.ORBIT_PERIOD;
         this.ORBIT_SPEED = this.ORBIT_ANGULAR_SPEED * this.ORBIT_RADIUS; // v = w * r
+        this.automatic_pilot = false;
+        this.keyP_pressed = false;
+
+        // -- variables
+        this.SPEED = 0.5;
+        this.ANGULAR_SPEED = 0.1;
+        this.scaleFactor = 1.0;
+        this.speedFactor = 1.0;
+        this.rotSpeedFactor = 0.5;
+        this.frictionFactor = 0.01;
+
+        // -- functionalities
         this.reset = ()=>this.vehicle.reset();
+        // ----
 
-        this.flags = [
-            undefined,
-            new CGFtexture(this, 'images/vehicle/flag/heman.jpg'),
-            new CGFtexture(this, 'images/vehicle/flag/doge.jpg'),
-            new CGFtexture(this, 'images/vehicle/flag/spongebob.jpg')
-        ];
-
-        this.flagsIds = {
-            'None': 0,
-            'Heman': 1,
-            'Doggo': 2,
-            'Spongebob': 3
-        };
-
-        this.selectedFlag = 1;
-
-        this.updateFlag();
-
-        // Supplies
+        // ---- supplies
         this.RELOADING_TIME = 1000;
         this.reloading = false;
         this.time_reloading = 0;
@@ -209,24 +213,52 @@ class MyScene extends CGFscene {
         ];
         this.supplyCounter = 0;
         // ----
+
+        // ---- other
+        this.lastFrameTime = undefined;
+        // ----
+
+        /* -------------------------------------------------------------------------
+                                        VEHICLE TEXTURES
+        /-------------------------------------------------------------------------*/
+        this.flags = [
+            undefined,
+            new CGFtexture(this, 'images/vehicle/flag/heman.jpg'),
+            new CGFtexture(this, 'images/vehicle/flag/toadette.jpg')
+        ];
+
+        this.flagsIds = {
+            'None': 0,
+            'Heman': 1,
+            'Toadette': 2
+        };
+
+        this.selectedFlag = 1;
+
+        this.updateFlag();
+        this.updateBackgroundTexture();
     }
+
     initLights() {
+        // full time lights
         this.lights[0].setPosition(15, 2, 5, 1);
         this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
         this.lights[0].enable();
         this.lights[0].update();
 
-        this.lights[1].setPosition(0, 0, 0, 0);
-        this.lights[1].setAmbient(1.0, 1.0, 1.0, 1.0);
+        this.lights[1].setPosition(-15, 2, -5, 1);
+        this.lights[1].setDiffuse(1.0, 1.0, 1.0, 1.0);
+        this.lights[1].enable();
+        this.lights[1].update();
 
-        this.lights[2].setPosition(-15, 2, -5, 1);
-        this.lights[2].setDiffuse(1.0, 1.0, 1.0, 1.0);
-        this.lights[2].enable();
-        this.lights[2].update();
+        // background light
+        this.lights[2].setPosition(0, 0, 0, 0);
+        this.lights[2].setAmbient(1.0, 1.0, 1.0, 1.0);
     }
     initCameras() {
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(30, 20, 30), vec3.fromValues(0, 5, 0));
     }
+
     setDefaultAppearance() {
         this.setAmbient(0.2, 0.4, 0.8, 1.0);
         this.setDiffuse(0.2, 0.4, 0.8, 1.0);
@@ -362,15 +394,15 @@ class MyScene extends CGFscene {
             if (this.gui.isKeyPressed("KeyD")) {
                 rot_direction -= 1;
             }
-            if (this.gui.isKeyPressed("KeyL")) {
-                this.dropSupply();
-            }
 
             if (this.showVehicle) {
                 this.vehicle.accelerate(acc_direction * this.SPEED * this.speedFactor, this.frictionFactor, this.MAX_SPEED, this.MIN_SPEED);
 
                 this.vehicle.accelerate_rotation(rot_direction * this.ANGULAR_SPEED * this.rotSpeedFactor, this.frictionFactor, this.MAX_ANGULAR_SPEED, this.MIN_ANGULAR_SPEED);
             }
+        }
+        if (this.gui.isKeyPressed("KeyL")) {
+            this.dropSupply();
         }
         if (this.gui.isKeyPressed("KeyR")) {
             this.resetElements();
@@ -422,14 +454,18 @@ class MyScene extends CGFscene {
         // Apply transformations corresponding to the camera position relative to the origin
         this.applyViewMatrix();
 
+        // lights
+        this.lights[0].update();
+        this.lights[1].update();
+
         // Draw axis
         if (this.displayAxis)
             this.axis.display();
 
         if (this.applyBackground) {
             // ---- Cubemap
-            this.lights[1].enable();
-            this.lights[1].update();
+            this.lights[2].enable();
+            this.lights[2].update();
             this.pushMatrix();
             this.translate(0, this.backgroundSeaLevel[this.selectedBackground], 0);
             this.scale(50, 50, 50);
@@ -441,8 +477,8 @@ class MyScene extends CGFscene {
             this.pushMatrix();
             this.translate(0, -0.01, 0);
             this.terrain.display();
-            this.lights[1].disable();
-            this.lights[1].update();
+            this.lights[2].disable();
+            this.lights[2].update();
             this.popMatrix();
             // ----
 

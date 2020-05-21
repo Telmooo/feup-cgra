@@ -26,6 +26,29 @@ class MyInterface extends CGFinterface {
         general_folder.add(this.scene, 'wireframe').name('Display wireframe').onChange(this.scene.onWireframeChanged.bind(this.scene));
 
         general_folder.open();
+
+        // -- Lights Configurations
+        var lights_folder = general_folder.addFolder("Lights Configuration");
+
+        // - Light 0
+        var light0 = lights_folder.addFolder('Light 0 Configuration');
+        light0.add(this.scene.lights[0], 'enabled').name("Enabled");
+        // Light 0 Position
+        var light0Pos = light0.addFolder('Position');
+        light0Pos.add(this.scene.lights[0].position, '0', -25.0, 25.0).name("X Position");
+        light0Pos.add(this.scene.lights[0].position, '1', 0.0, 30.0).name("Y Position");
+        light0Pos.add(this.scene.lights[0].position, '2', -25.0, 25.0).name("Z Position");
+
+        // - Light 0
+        var light1 = lights_folder.addFolder('Light 1 Configuration');
+        light1.add(this.scene.lights[1], 'enabled').name("Enabled");
+        // Light 1 Position
+        var light0Pos = light1.addFolder('Position');
+        light0Pos.add(this.scene.lights[1].position, '0', -25.0, 25.0).name("X Position");
+        light0Pos.add(this.scene.lights[1].position, '1', 0.0, 30.0).name("Y Position");
+        light0Pos.add(this.scene.lights[1].position, '2', -25.0, 25.0).name("Z Position");
+        // --
+
         // ---- Single Objects configuration
         var objects_folder = this.gui.addFolder("Single Objects Configuration");
 
