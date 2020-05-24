@@ -18,6 +18,11 @@ class MyVehicle extends CGFobject {
         this.x = 0;
         this.y = 10;
         this.z = 0;
+
+        // auto pilot
+        this.speed_pilot = 0;
+        this.rotationSpeed_pilot = 0;
+
         this.initMaterials();
     }
 
@@ -161,8 +166,17 @@ class MyVehicle extends CGFobject {
 	}
 
     enterPilotMode(speed, angular_speed) {
+        this.speed_pilot = this.speed;
+        this.rotationSpeed_pilot = this.rotationSpeed;
+
         this.speed = speed;
         this.rotationSpeed = angular_speed;
+
+    }
+
+    exitPilotMode() {
+        this.speed = this.speed_pilot;
+        this.rotationSpeed = this.rotationSpeed_pilot;
     }
 
     getX() {
@@ -300,6 +314,10 @@ class MyGondola extends CGFobject {
         this.gondolaExtremeTex.setShininess(10.0);
         this.gondolaExtremeTex.loadTexture('images/vehicle/gondola/gondola_extremes.jpg');
         this.gondolaExtremeTex.setTextureWrap('REPEAT', 'REPEAT');
+
+
+        this.supportTexRight = new CGFtexture(this.scene, 'images/vehicle/helice/helice_support_right.jpg');
+        this.supportTexLeft = new CGFtexture(this.scene, 'images/vehicle/helice/helice_support_left.jpg');
     }
 
     display() {
@@ -334,6 +352,7 @@ class MyGondola extends CGFobject {
         // ---- Left Helice
         this.scene.pushMatrix();
         this.scene.translate(-1.2, 0, -2.2);
+        this.helice.setSupportTexture(this.supportTexLeft);
         this.helice.display();
         this.scene.popMatrix();
         // ----
@@ -341,6 +360,8 @@ class MyGondola extends CGFobject {
         // ---- Right Helice
         this.scene.pushMatrix();
         this.scene.translate(1.2, 0, -2.2);
+        this.scene.rotate(Math.PI, 0, 0, 1);
+        this.helice.setSupportTexture(this.supportTexRight);
         this.helice.display();
         this.scene.popMatrix();
         // ----
@@ -401,7 +422,6 @@ class MyHeliceSupport extends CGFobject {
         this.heliceSupportTex.setDiffuse(0.9, 0.9, 0.9, 1);
         this.heliceSupportTex.setSpecular(0.1, 0.1, 0.1, 1);
         this.heliceSupportTex.setShininess(10.0);
-        this.heliceSupportTex.loadTexture('images/vehicle/helice/helice_support.jpg');
         this.heliceSupportTex.setTextureWrap('REPEAT', 'REPEAT');
     }
 
@@ -421,6 +441,10 @@ class MyHeliceSupport extends CGFobject {
         this.helice.display();
         this.scene.popMatrix();
         // ----
+    }
+
+    setSupportTexture(texture) {
+        this.heliceSupportTex.setTexture(texture);
     }
 
     update(speed, absolute_max_speed) {

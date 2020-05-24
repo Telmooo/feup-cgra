@@ -36,7 +36,7 @@ class MyInterface extends CGFinterface {
         // Light 0 Position
         var light0Pos = light0.addFolder('Position');
         light0Pos.add(this.scene.lights[0].position, '0', -25.0, 25.0).name("X Position");
-        light0Pos.add(this.scene.lights[0].position, '1', 0.0, 30.0).name("Y Position");
+        light0Pos.add(this.scene.lights[0].position, '1', 0.0, 50.0).name("Y Position");
         light0Pos.add(this.scene.lights[0].position, '2', -25.0, 25.0).name("Z Position");
 
         // - Light 0
@@ -45,7 +45,7 @@ class MyInterface extends CGFinterface {
         // Light 1 Position
         var light0Pos = light1.addFolder('Position');
         light0Pos.add(this.scene.lights[1].position, '0', -25.0, 25.0).name("X Position");
-        light0Pos.add(this.scene.lights[1].position, '1', 0.0, 30.0).name("Y Position");
+        light0Pos.add(this.scene.lights[1].position, '1', 0.0, 50.0).name("Y Position");
         light0Pos.add(this.scene.lights[1].position, '2', -25.0, 25.0).name("Z Position");
         // --
 
@@ -96,6 +96,20 @@ class MyInterface extends CGFinterface {
         vehicle_folder.add(this.scene, 'reset').name("Reset Vehicle");
 
         vehicle_folder.open();
+        // ----
+
+        // ---- Music
+        var music_folder = this.gui.addFolder("Music Configuration");
+
+        music_folder.add(this.scene, 'playYoshi').name("Play Yoshi's Island");
+
+        music_folder.add(this.scene, 'playSuprise').name("Play Anthem");
+
+        music_folder.add(this.scene, 'volume', 0.0, 1.0).step(0.01).name("Volume").onChange(this.scene.updateVolume.bind(this.scene));
+
+        music_folder.add(this.scene, 'pause').name("Pause Music");
+
+        music_folder.add(this.scene, 'stop').name("Stop Music");
         // ----
 
         this.initKeys();

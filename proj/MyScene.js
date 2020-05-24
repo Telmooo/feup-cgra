@@ -169,7 +169,7 @@ class MyScene extends CGFscene {
 
         // ---- background
         this.applyBackground = true;
-        this.selectedBackground = 1;
+        this.selectedBackground = 2;
         this.selectedFilter = 0;
         // ----
 
@@ -189,12 +189,12 @@ class MyScene extends CGFscene {
         this.keyP_pressed = false;
 
         // -- variables
-        this.SPEED = 0.5;
-        this.ANGULAR_SPEED = 0.1;
+        this.acceleration = 0.5;
+        this.angular_acceleration = 0.5;
         this.scaleFactor = 1.0;
         this.speedFactor = 1.0;
-        this.rotSpeedFactor = 0.5;
-        this.frictionFactor = 0.01;
+        this.rotSpeedFactor = 1.0;
+        this.frictionFactor = 0.04;
 
         // -- functionalities
         this.reset = ()=>this.vehicle.reset();
@@ -218,19 +218,63 @@ class MyScene extends CGFscene {
         this.lastFrameTime = undefined;
         // ----
 
+        // ---- music
+        this.yoshi = new Audio('music/Yoshi\'s Island.mp3');
+        this.yoshi.loop = false;
+
+        this.suprise = new Audio('music/Suprise.mp3');
+        this.suprise.loop = false;
+
+        this.volume = 0.5;
+
+        this.pause = ()=>{
+            if (!this.yoshi.paused)
+                this.yoshi.pause();
+            if (!this.suprise.paused)
+                this.suprise.pause();
+        };
+
+        this.updateVolume = ()=>{
+            this.yoshi.volume = this.volume;
+            this.suprise.volume = this.volume;
+        };
+
+        this.stop = ()=>{
+            this.yoshi.pause();
+            this.yoshi.currentTime = 0;
+            this.suprise.pause();
+            this.suprise.currentTime = 0;
+        };
+
+        this.playYoshi = ()=>{
+            if (this.yoshi.paused) {
+                this.suprise.pause();
+                this.yoshi.play();
+            }
+        };
+        this.playSuprise = ()=>{
+            if (this.suprise.paused) {
+                this.yoshi.pause();
+                this.suprise.play();
+            }
+        };
+
+        this.updateVolume();
+        // ----
+
         /* -------------------------------------------------------------------------
                                         VEHICLE TEXTURES
         /-------------------------------------------------------------------------*/
         this.flags = [
             undefined,
-            new CGFtexture(this, 'images/vehicle/flag/heman.jpg'),
-            new CGFtexture(this, 'images/vehicle/flag/toadette.jpg')
+            new CGFtexture(this, 'images/vehicle/flag/toadette.jpg'),
+            new CGFtexture(this, 'images/vehicle/flag/heman.jpg')
         ];
 
         this.flagsIds = {
             'None': 0,
-            'Heman': 1,
-            'Toadette': 2
+            'Toadette': 1,
+            'Heman': 2
         };
 
         this.selectedFlag = 1;
@@ -241,12 +285,12 @@ class MyScene extends CGFscene {
 
     initLights() {
         // full time lights
-        this.lights[0].setPosition(15, 2, 5, 1);
+        this.lights[0].setPosition(-15, 2, 9, 1);
         this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
         this.lights[0].enable();
         this.lights[0].update();
 
-        this.lights[1].setPosition(-15, 2, -5, 1);
+        this.lights[1].setPosition(0, 17.5, 0, 1);
         this.lights[1].setDiffuse(1.0, 1.0, 1.0, 1.0);
         this.lights[1].enable();
         this.lights[1].update();
@@ -371,11 +415,14 @@ class MyScene extends CGFscene {
         var acc_direction = 0;
         var rot_direction = 0;
 
-        if (this.gui.isKeyPressed("KeyP") && !this.keyP_pressed) {
-            this.keyP_pressed = true;
-            this.automatic_pilot = !this.automatic_pilot;
+        if (this.gui.isKeyPressed("KeyP")) {
+            if (!this.keyP_pressed) {
+                this.keyP_pressed = true;
+                this.automatic_pilot = !this.automatic_pilot;
 
-            if (this.automatic_pilot) this.vehicle.enterPilotMode(this.ORBIT_SPEED, this.ORBIT_ANGULAR_SPEED);
+                if (this.automatic_pilot) this.vehicle.enterPilotMode(this.ORBIT_SPEED, this.ORBIT_ANGULAR_SPEED);
+                else                      this.vehicle.exitPilotMode();
+            }
         } else {
             this.keyP_pressed = false;
         }
@@ -396,9 +443,9 @@ class MyScene extends CGFscene {
             }
 
             if (this.showVehicle) {
-                this.vehicle.accelerate(acc_direction * this.SPEED * this.speedFactor, this.frictionFactor, this.MAX_SPEED, this.MIN_SPEED);
+                this.vehicle.accelerate(acc_direction * this.acceleration * this.speedFactor, this.frictionFactor, this.MAX_SPEED, this.MIN_SPEED);
 
-                this.vehicle.accelerate_rotation(rot_direction * this.ANGULAR_SPEED * this.rotSpeedFactor, this.frictionFactor, this.MAX_ANGULAR_SPEED, this.MIN_ANGULAR_SPEED);
+                this.vehicle.accelerate_rotation(rot_direction * this.angular_acceleration * this.rotSpeedFactor, this.frictionFactor, this.MAX_ANGULAR_SPEED, this.MIN_ANGULAR_SPEED);
             }
         }
         if (this.gui.isKeyPressed("KeyL")) {
@@ -416,7 +463,7 @@ class MyScene extends CGFscene {
                 if (this.supplies[i].isInactive()) {
                     // To drop from bottom of the vehicle, there's a need to lower the Y value by the radius of the vehicle from the center to the bottom
                     // and also lower by half of the supply size
-                    let y_thrown = this.vehicle.getY() - (this.vehicle.getRadiusFromCenterToBottom() + this.supplies[i].getFaceSize() / 2) * this.scaleFactor;
+                    let y_thrown = this.vehicle.getY() - (this.vehicle.getRadiusFromCenterToBottom() + this.supplies[i].getFaceSize() / 2);
                     this.supplies[i].drop(this.vehicle.getX(), y_thrown, this.vehicle.getZ(), this.vehicle.getOrientation(), 0.4 * this.vehicle.getSpeed(), Physics.freeFallingGravity(y_thrown, 3));
                     this.supplyCounter++;
                     this.billboard.updateShader(this.supplyCounter / this.supplies.length);
