@@ -9,7 +9,7 @@
 - **Curricular Unit**: [CGRA](https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=436438) (Computer Graphics)
 
 ## Github Page
-![Explore the project](https://telmooo.github.io/feup-cgra/proj/)
+[Explore the project](https://telmooo.github.io/feup-cgra/proj/)
 
 ## Group Members
 - Telmo Baptista (up201806554@fe.up.pt)
