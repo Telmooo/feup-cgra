@@ -8,6 +8,9 @@
 - **Course**: [MIEIC](https://sigarra.up.pt/feup/en/cur_geral.cur_view?pv_curso_id=742&pv_ano_lectivo=2019)
 - **Curricular Unit**: [CGRA](https://sigarra.up.pt/feup/pt/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=436438) (Computer Graphics)
 
+## Github Page
+![Explore the project](https://telmooo.github.io/feup-cgra/proj/)
+
 ## Group Members
 - Telmo Baptista (up201806554@fe.up.pt)
 
