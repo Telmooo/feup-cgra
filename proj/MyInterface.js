@@ -61,7 +61,7 @@ class MyInterface extends CGFinterface {
         material_folder.addColor(this.scene.materialValues,'Diffuse').onChange(this.scene.updateMaterial.bind(this.scene));
         material_folder.addColor(this.scene.materialValues,'Specular').onChange(this.scene.updateMaterial.bind(this.scene));
         material_folder.add(this.scene.materialValues,'Shininess', 0, 100).onChange(this.scene.updateMaterial.bind(this.scene));
-        material_folder.add(this.scene, 'selectedTexture', this.scene.textureList).name('Texture').onChange(this.scene.updateMaterial.bind(this.scene));
+        material_folder.add(this.scene, 'selectedTexture', this.scene.textureList).name('Texture').onChange(this.scene.updateAppliedTexture.bind(this.scene));
         // --
         // ----
 
