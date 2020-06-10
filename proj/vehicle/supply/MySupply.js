@@ -127,6 +127,7 @@ class MySupply extends CGFobject {
         this.scene.pushMatrix();
         this.scene.translate(this.x, this.y, this.z);
         this.scene.rotate(this.orientation, 0, 1, 0);
+        this.scene.scale(this.scene.scaleFactor, this.scene.scaleFactor, this.scene.scaleFactor);
 
         this.scene.pushMatrix();
 
@@ -199,6 +200,7 @@ class MySupply extends CGFobject {
             this.scene.rotate(this.facesOrientationOnLand[i], 0, 1, 0);
             this.scene.translate(0, -0.5, 0);
             this.scene.rotate(-Math.PI/2, 1, 0, 0);
+            this.scene.scale(this.scene.scaleFactor, this.scene.scaleFactor, this.scene.scaleFactor);
             this.quad.display();
             this.scene.popMatrix();
         }

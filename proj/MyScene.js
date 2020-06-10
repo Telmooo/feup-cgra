@@ -463,7 +463,7 @@ class MyScene extends CGFscene {
                 if (this.supplies[i].isInactive()) {
                     // To drop from bottom of the vehicle, there's a need to lower the Y value by the radius of the vehicle from the center to the bottom
                     // and also lower by half of the supply size
-                    let y_thrown = this.vehicle.getY() - (this.vehicle.getRadiusFromCenterToBottom() + this.supplies[i].getFaceSize() / 2);
+                    let y_thrown = this.vehicle.getY() - (this.vehicle.getRadiusFromCenterToBottom() + this.supplies[i].getFaceSize() / 2) * this.scaleFactor;
                     this.supplies[i].drop(this.vehicle.getX(), y_thrown, this.vehicle.getZ(), this.vehicle.getOrientation(), 0.4 * this.vehicle.getSpeed(), Physics.freeFallingGravity(y_thrown, 3));
                     this.supplyCounter++;
                     this.billboard.updateShader(this.supplyCounter / this.supplies.length);
@@ -545,7 +545,6 @@ class MyScene extends CGFscene {
 
         if (this.showVehicle) {
             this.pushMatrix();
-            this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
             this.vehicle.display();
             this.popMatrix();
 
@@ -553,7 +552,6 @@ class MyScene extends CGFscene {
         for (let i = 0; i < this.supplies.length; i++) {
             if (!this.supplies[i].isInactive()) {
                 this.pushMatrix();
-                this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
                 this.supplies[i].display();
                 this.popMatrix();
             }
